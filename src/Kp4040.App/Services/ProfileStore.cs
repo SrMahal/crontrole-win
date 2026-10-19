@@ -25,6 +25,7 @@ public sealed class ProfileStore
         if (loaded.SchemaVersion != 1)
             throw new InvalidDataException("Versao do perfil ainda nao suportada.");
         loaded.Mappings ??= new Dictionary<string, ActionKind>();
+        loaded.Shortcuts ??= new Dictionary<string, KeyboardShortcut>();
         foreach (var button in ControllerButtons.All)
             loaded.Mappings.TryAdd(button.Key, ActionKind.None);
         return loaded;

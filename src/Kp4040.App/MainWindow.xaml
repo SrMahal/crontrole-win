@@ -35,11 +35,13 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <TextBlock Text="KP-4040 AI Controller" FontSize="25" FontWeight="SemiBold" />
-                <TextBlock Text="Monitor XInput e mapeamento local · Alpha 0.3" Foreground="{StaticResource Muted}" Margin="0,5,0,0" />
+                <TextBlock Text="Monitor XInput, atalhos e mouse analógico · Alpha 0.5.1" Foreground="{StaticResource Muted}" Margin="0,5,0,0" />
             </StackPanel>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <CheckBox x:Name="ActionsEnabledCheck" Content="Habilitar execução de ações"
                           FontWeight="SemiBold" HorizontalAlignment="Right" />
+                <CheckBox x:Name="AnalogMouseEnabledCheck" Content="Analógicos: mouse e scroll"
+                          FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,8,0,0" />
                 <TextBlock Text="Desligada a cada inicialização" FontSize="11"
                            Foreground="{StaticResource Muted}" HorizontalAlignment="Right" Margin="0,4,0,0" />
             </StackPanel>
@@ -75,7 +77,7 @@
                     <TextBlock x:Name="LeftStickText" Text="0 / 0" FontFamily="Consolas" />
                     <TextBlock Text="Stick direito (RX / RY)" Foreground="{StaticResource Muted}" Margin="0,16,0,4" FontSize="12" />
                     <TextBlock x:Name="RightStickText" Text="0 / 0" FontFamily="Consolas" />
-                    <TextBlock Text="Movimentos dos sticks são monitorados, mas ainda não disparam ações."
+                    <TextBlock Text="Stick esquerdo: cursor. Stick direito: scroll vertical e horizontal. Ative no topo."
                                Foreground="{StaticResource Muted}" FontSize="11" TextWrapping="Wrap" Margin="0,20,0,0" />
                 </StackPanel>
             </Border>
@@ -84,6 +86,7 @@
                     BorderBrush="#E5E8ED" BorderThickness="1">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -99,10 +102,18 @@
                             <TextBlock Text="Defina uma ação para cada entrada do XInput."
                                        Foreground="{StaticResource Muted}" FontSize="12" Margin="0,5,0,0" />
                         </StackPanel>
-                        <Button Grid.Column="1" x:Name="SaveProfileButton" Content="Salvar perfil"
-                                Click="SaveProfileButton_Click" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button x:Name="IdentifyButton" Content="Identificar botão"
+                                    Click="IdentifyButton_Click" Margin="0,0,8,0" />
+                            <Button x:Name="SaveProfileButton" Content="Salvar perfil"
+                                    Click="SaveProfileButton_Click" />
+                        </StackPanel>
                     </Grid>
-                    <Grid Grid.Row="1" Margin="0,12,0,10">
+                    <TextBlock Grid.Row="1" x:Name="IdentifyStatusText"
+                               Text="Clique em Identificar botão e pressione um botão do controle."
+                               Foreground="#26598E" FontSize="12" Margin="0,0,0,8"
+                               TextWrapping="Wrap" />
+                    <Grid Grid.Row="2" Margin="0,12,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="205" />
@@ -112,52 +123,76 @@
                         <TextBlock Grid.Column="1" Text="AÇÃO" FontSize="11" FontWeight="SemiBold"
                                    Foreground="{StaticResource Muted}" />
                     </Grid>
-                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding Bindings}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="#ECEEF2" BorderThickness="0,0,0,1" Padding="0,6">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="Background" Value="White" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsPressed}" Value="True">
-                                                        <Setter Property="Background" Value="#E5F6EC" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="205" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Ellipse Width="8" Height="8" Margin="0,0,9,0">
-                                                    <Ellipse.Style>
-                                                        <Style TargetType="Ellipse">
-                                                            <Setter Property="Fill" Value="#C8CFD9" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsPressed}" Value="True">
-                                                                    <Setter Property="Fill" Value="#1D9E5A" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Ellipse.Style>
-                                                </Ellipse>
-                                                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                            <ComboBox Grid.Column="1" Margin="8,0,3,0"
-                                                      ItemsSource="{Binding Choices}"
+                    <ListBox Grid.Row="3" x:Name="MappingList" ItemsSource="{Binding Bindings}"
+                             BorderThickness="0" Background="Transparent"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#ECEEF2" BorderThickness="0,0,0,1" Padding="0,6">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="White" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPressed}" Value="True">
+                                                    <Setter Property="Background" Value="#E5F6EC" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsIdentified}" Value="True">
+                                                    <Setter Property="Background" Value="#DCEBFF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="205" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Ellipse Width="8" Height="8" Margin="0,0,9,0">
+                                                <Ellipse.Style>
+                                                    <Style TargetType="Ellipse">
+                                                        <Setter Property="Fill" Value="#C8CFD9" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsPressed}" Value="True">
+                                                                <Setter Property="Fill" Value="#1D9E5A" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Ellipse.Style>
+                                            </Ellipse>
+                                            <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="8,0,3,0">
+                                            <ComboBox ItemsSource="{Binding Choices}"
                                                       DisplayMemberPath="Label" SelectedValuePath="Kind"
                                                       SelectedValue="{Binding SelectedAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                    <TextBlock Grid.Row="3" x:Name="ProfileStatusText" FontSize="11" Margin="0,12,0,0"
+                                            <Button Content="{Binding ShortcutLabel}" Click="CaptureShortcut_Click"
+                                                    Margin="0,4,0,0" Padding="8,4" HorizontalAlignment="Stretch">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding NeedsShortcut}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Grid.Row="4" x:Name="ProfileStatusText" FontSize="11" Margin="0,12,0,0"
                                Foreground="{StaticResource Muted}" TextTrimming="CharacterEllipsis"
                                Text="Perfil local · JSON" />
                 </Grid>

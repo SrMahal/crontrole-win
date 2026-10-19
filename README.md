@@ -2,7 +2,7 @@
 
 Aplicativo desktop experimental para transformar o controle USB KNUP KP-4040 em um painel de atalhos no Windows 11. **Não oficial, sem associação à KNUP, Microsoft ou OpenAI.**
 
-**Alpha 0.3 — código-fonte WPF/C#/.NET 10**. Lê um controle XInput, mostra os estados em tempo real e permite associar botões a atalhos simples do Windows. Não requer API Key, driver customizado, NuGet extra nem permissões de administrador.
+**Alpha 0.5 — código-fonte WPF/C#/.NET 10**. Lê um controle XInput, mostra os estados em tempo real e permite associar botões a atalhos simples do Windows. Não requer API Key, driver customizado, NuGet extra nem permissões de administrador.
 
 ## Iniciar no Windows 11
 
@@ -113,3 +113,16 @@ O executável gerado ficará dentro de `src\Kp4040.App\bin\Release\net10.0-windo
 - **Abrir ChatGPT** apenas abre `https://chatgpt.com/` no navegador; não automatiza nem acessa suas conversas.
 - Os presets podem alterar documentos ou aplicativos abertos (por exemplo, colar texto/Enter). Habilite conscientemente.
 - Para uma futura integração OpenAI, usar armazenamento de segredos separado dos perfis exportáveis, com configuração explícita do usuário e tratamento de custos/limites.
+
+
+## Alpha 0.5 — Identificar botão, mouse e teclado
+
+- Clique em **Identificar botão** e pressione A/B/X/Y, D-pad, L1/R1, L3/R3 ou L2/R2 (acima do limiar configurado). A linha reconhecida ficará destacada e visível. Clique novamente para cancelar.
+- Selecione uma ação da lista da linha: teclado (presets ou **Gravar tecla/atalho**), mouse (clique, duplo clique, meio, voltar/avançar, scroll 4 direções) ou controles de mídia.
+- Em **Gravar tecla/atalho**, clique no botão **Gravar atalho...** e pressione uma tecla, com Ctrl/Shift/Alt/Win se desejar. Esc sozinho cancela a gravação; escolha o preset **Esc** se precisar dessa tecla. Atalhos reservados pelo Windows podem não ser capturados.
+- Os atalhos configurados ficam no mesmo `%LOCALAPPDATA%\KP4040AIController\profiles\default.json`, em `Shortcuts`. O JSON anterior da Alpha 0.4 continua válido e é preservado.
+- Ao identificar um botão ou gravar um atalho, as ações são suspensas para evitar disparos; com a janela ativa, injeções locais também são bloqueadas. **Ative as ações manualmente** para testar em outro aplicativo.
+- O mouse analógico da Alpha 0.4 permanece com seu próprio checkbox. O novo motor **não** instala drivers nem intercepta o controle nos jogos.
+- Ao trocar a ação de um botão, o atalho gravado permanece guardado e pode ser reutilizado se você selecionar novamente **Gravar tecla/atalho**.
+
+**Limitações:** apenas um botão XInput por vez na identificação; movimentos dos analógicos não são capturados como botões. O editor de atalhos executa combinações usuais de teclas e algumas teclas especiais (via presets); não é um gravador de macros nem um mapeador global de todos os dispositivos HID.
