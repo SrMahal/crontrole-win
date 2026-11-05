@@ -5,3 +5,9 @@
 *.user
 *.suo
 *.log
+.env
+.env.*
+*.pfx
+*.key
+secrets.json
+dist/win-x64/

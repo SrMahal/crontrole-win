@@ -4,7 +4,7 @@
 
 ## Ativar com segurança
 
-O Crontrole monitora o dispositivo sem disparar comandos até você marcar **Habilitar execução de ações**. Para controlar o cursor e a rolagem, marque também **Analógicos: mouse e scroll**. O uso do segundo checkbox depende do primeiro.
+As opções **Habilitar execução de ações** e **Analógicos: mouse e scroll** iniciam marcadas. Desmarque qualquer uma delas quando quiser suspender as ações ou o movimento analógico. O uso do segundo checkbox depende do primeiro.
 
 ## Identificar um botão
 
@@ -13,15 +13,19 @@ O Crontrole monitora o dispositivo sem disparar comandos até você marcar **Hab
 3. A lista selecionará a entrada XInput correspondente.
 4. Escolha uma ação na linha destacada.
 5. Para gravar um atalho personalizado, selecione a ação apropriada e clique em **Gravar atalho**; pressione a combinação no teclado.
-6. Habilite as ações e teste fora da janela de configuração.
+6. Teste atalhos de teclado fora da janela de configuração. As ações já estão habilitadas ao abrir o app.
 
 No modo de gravação, **Esc** sozinho cancela. Para mapear Esc, utilize o preset correspondente. Certos atalhos globais reservados pelo Windows não podem ser capturados ou reproduzidos de modo confiável.
+
+Para usar **Alt+Tab com dois botões**, mapeie R1 para **Alt** e R2 para **Tab**. Segure R1, pressione R2 e solte R1. Alt também pode ser gravado sozinho ao pressionar e soltar a tecla durante a captura.
+
+Para **arrastar**, mapeie A para **Mouse · Clique esquerdo**, segure A, mova o cursor com o stick esquerdo e solte A. O cursor deve estar sobre uma parte visível da janela de destino. Um atalho personalizado pode ser apagado com **Remover atalho**.
 
 ## Exemplos de ações disponíveis
 
 | Grupo | Exemplos |
 | --- | --- |
-| Teclado | Enter, Tab, Esc, Espaço, Backspace, Delete, setas, Home, End, Page Up/Down |
+| Teclado | Alt, Enter, Tab, Esc, Espaço, Backspace, Delete, setas, Home, End, Page Up/Down |
 | Atalhos | Ctrl+C, Ctrl+V, Ctrl+A, Ctrl+Z; combinações personalizadas com modificadores |
 | Mouse | Clique esquerdo/direito/meio, duplo clique, botões laterais, rolagem nas quatro direções |
 | Mídia | Play/Pause, avançar/voltar faixa, volume e mudo |

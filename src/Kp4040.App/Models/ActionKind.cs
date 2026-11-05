@@ -9,7 +9,8 @@ public enum ActionKind
     ArrowRight, Home, End, PageUp, PageDown,
     MouseLeft, MouseRight, MouseMiddle, MouseDoubleLeft,
     MouseBack, MouseForward, WheelUp, WheelDown, WheelLeft, WheelRight,
-    MediaPlayPause, MediaNext, MediaPrevious, VolumeUp, VolumeDown, VolumeMute
+    MediaPlayPause, MediaNext, MediaPrevious, VolumeUp, VolumeDown, VolumeMute,
+    Alt
 }
 
 public sealed record ActionChoice(ActionKind Kind, string Label);
@@ -26,6 +27,7 @@ public static class ActionCatalog
         new(ActionKind.SelectAll, "⌨ Selecionar tudo · Ctrl+A"),
         new(ActionKind.Undo, "⌨ Desfazer · Ctrl+Z"),
         new(ActionKind.Tab, "⌨ Tab"),
+        new(ActionKind.Alt, "⌨ Alt"),
         new(ActionKind.Escape, "⌨ Esc"),
         new(ActionKind.Space, "⌨ Espaço"),
         new(ActionKind.Backspace, "⌨ Backspace"),

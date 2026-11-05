@@ -21,6 +21,7 @@ public sealed class ButtonMappingRow : INotifyPropertyChanged
     public string Label => Descriptor.Label;
     public IReadOnlyList<ActionChoice> Choices => ActionCatalog.All;
     public bool NeedsShortcut => SelectedAction == ActionKind.CustomKeyboard;
+    public bool HasShortcut => Shortcut is not null;
     public string ShortcutLabel => Shortcut?.Label ?? "Gravar atalho...";
 
     public ActionKind SelectedAction
@@ -44,8 +45,25 @@ public sealed class ButtonMappingRow : INotifyPropertyChanged
             _shortcut = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShortcutLabel));
+            OnPropertyChanged(nameof(HasShortcut));
             MappingChanged?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public void RemoveShortcut()
+    {
+        if (_shortcut is null) return;
+        _shortcut = null;
+        if (_selectedAction == ActionKind.CustomKeyboard)
+        {
+            _selectedAction = ActionKind.None;
+            OnPropertyChanged(nameof(SelectedAction));
+            OnPropertyChanged(nameof(NeedsShortcut));
+        }
+        OnPropertyChanged(nameof(Shortcut));
+        OnPropertyChanged(nameof(ShortcutLabel));
+        OnPropertyChanged(nameof(HasShortcut));
+        MappingChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public bool IsPressed

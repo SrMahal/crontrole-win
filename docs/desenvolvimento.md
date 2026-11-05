@@ -46,6 +46,7 @@ O nome `Kp4040.App` é **legado**. A atualização da identidade visual para Cro
 - **Execução de ações:** `Services/ActionExecutor.cs`.
 - **Sensibilidade e zona morta:** `Services/AnalogMouseController.cs` (constantes atuais).
 - **Frequência de leitura do mouse:** `Services/MousePollingService.cs`.
+- **Frequência de leitura dos botões:** `Services/ControllerPollingService.cs`.
 - **Formato e gravação de perfis:** `Models/ControllerProfile.cs` e `Services/ProfileStore.cs`.
 
 Consulte a [arquitetura detalhada](arquitetura.md).
@@ -53,16 +54,16 @@ Consulte a [arquitetura detalhada](arquitetura.md).
 ## Checklist antes de abrir um PR
 
 1. Compile no Windows com `dotnet build`.
-2. Confirme que a interface abre com ações desativadas.
+2. Confirme que a interface abre com ações e analógicos habilitados e que ambas as caixas podem ser desmarcadas.
 3. Teste a detecção de conexão/desconexão e a captura de botões.
 4. Teste teclado e mouse com outra janela em foco.
 5. Valide scroll, zona morta e desativação imediata do mouse.
 6. Verifique compatibilidade de `default.json` anterior e não exponha dados pessoais.
-7. **Não inclua `bin/` nem `obj/` no commit.** Se já estavam versionados, remova-os do índice do Git separadamente.
+7. **Não inclua `bin/` nem `obj/` no commit.**
 
 ## Git e arquivos gerados
 
-A regra `.gitignore` evita novos arquivos ignorados, mas **não remove os já versionados**. A base histórica do repositório incluiu alguns arquivos de compilação. Para uma manutenção futura, após revisar seu Git local, use `git rm -r --cached src/Kp4040.App/bin src/Kp4040.App/obj` e publique essa limpeza em commit próprio. O comando remove do índice, não apaga os arquivos locais.
+A regra `.gitignore` evita novos arquivos gerados. Os antigos arquivos de `bin/` e `obj/` foram removidos do índice do Git; o ZIP distribuível fica em `dist/`.
 
 ## Melhorias de código previstas
 

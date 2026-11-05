@@ -4,7 +4,7 @@
 
 ## Execução consciente
 
-O Crontrole inicia com **execução de ações desativada**. A opção para mouse analógico também precisa da habilitação geral para atuar. Atalhos simulados podem alterar textos, executar comandos de interface ou clicar onde o cursor estiver; teste primeiro em aplicações sem dados sensíveis.
+O Crontrole inicia com **execução de ações e mouse analógico habilitados**. As duas opções podem ser desmarcadas na janela; o mouse analógico também precisa da habilitação geral para atuar. Atalhos simulados podem alterar textos, executar comandos de interface ou clicar onde o cursor estiver; teste primeiro em aplicações sem dados sensíveis.
 
 A captura de um botão e a gravação de um atalho suspendem a execução de ações durante esse processo. Na implementação atual, o aplicativo também procura evitar atalhos de teclado enviados para sua própria janela.
 

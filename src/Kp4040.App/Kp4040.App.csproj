@@ -8,5 +8,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Kp4040.App</AssemblyName>
     <RootNamespace>Kp4040.App</RootNamespace>
+    <ApplicationIcon>Assets\crontrole.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\crontrole-icon.png" />
+    <Resource Include="Assets\crontrole-icon.png" />
+  </ItemGroup>
 </Project>

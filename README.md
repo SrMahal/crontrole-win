@@ -6,7 +6,7 @@ O **Crontrole** é um aplicativo desktop para Windows que transforma controles c
 
 **Windows 11 · C# · .NET 10 · WPF · XInput 1.4**
 
-> **Alpha v1.0** é a identidade do primeiro lançamento experimental planejado. A base de código atualmente publicada no repositório corresponde à **Alpha 0.5.1**; os nomes internos e o título da janela ainda serão migrados para *Crontrole*. Consulte o [roteiro de versões](docs/roadmap.md).
+> **Alpha v1.0** é uma versão experimental. A janela e o executável já se chamam *Crontrole*; o projeto C# e a pasta local do perfil conservam o identificador `Kp4040.App` para compatibilidade.
 
 ## O que já funciona
 
@@ -14,8 +14,10 @@ O **Crontrole** é um aplicativo desktop para Windows que transforma controles c
 - ⌨️ **Atalhos personalizáveis:** atribua teclas, combinações e comandos de mídia.
 - 🖱️ **Mouse pelo controle:** analógico esquerdo move o cursor; direito controla o scroll vertical e horizontal.
 - 🖱️ **Ações do mouse:** clique esquerdo, direito, duplo clique, voltar, avançar e rolagem.
+- 🖱️ **Arrastar:** mantenha um botão mapeado para clique esquerdo pressionado e mova o stick esquerdo.
+- ⌨️ **Combinar botões:** segure um botão mapeado para Alt e pressione outro mapeado para Tab.
 - 💾 **Perfil local:** as configurações são salvas em JSON no Windows.
-- 🔒 **Ativação consciente:** as ações começam desabilitadas a cada abertura.
+- ⚙️ **Controles de ativação:** ações e analógicos iniciam habilitados; as duas opções podem ser desmarcadas na janela.
 
 O Crontrole **não** exige uma chave de API. O comando “Abrir ChatGPT” apenas abre o site no navegador; a integração direta com a API da OpenAI é uma possibilidade futura.
 
@@ -31,7 +33,7 @@ dotnet run --project .\src\Kp4040.App\Kp4040.App.csproj
 
 O caminho do projeto ainda utiliza o nome técnico legado `Kp4040.App`, mantido temporariamente por compatibilidade.
 
-**Prefere baixar uma versão para teste?** Confira a área de [Releases](https://github.com/SrMahal/crontrole-win/releases). A disponibilidade de executáveis depende dos arquivos anexados a cada lançamento.
+**Prefere executar sem compilar?** Baixe o [pacote Windows x64](dist/Crontrole-Alpha-v1.0-win-x64.zip), extraia os quatro arquivos na mesma pasta e abra `Crontrole.exe`. Este pacote requer o **.NET 10 Desktop Runtime** instalado no Windows. O [SDK .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0) também atende esse requisito.
 
 ## Documentação
 

@@ -69,6 +69,13 @@ public sealed class ActionExecutor
     [DllImport("user32.dll", SetLastError = true)]
     private static extern uint SendInput(uint count, INPUT[] inputs, int size);
 
+    // Usado para combinar um botão Alt mantido com outras ações, como Tab.
+    public bool SetAltHeld(bool held) =>
+        SendInput(1, [Keyboard(0x12, release: !held)], Marshal.SizeOf<INPUT>()) == 1;
+
+    public bool SetLeftMouseHeld(bool held) =>
+        SendInput(1, [Mouse(held ? MouseLeftDown : MouseLeftUp)], Marshal.SizeOf<INPUT>()) == 1;
+
     public string Execute(ActionKind action, bool appHasFocus, KeyboardShortcut? shortcut = null)
     {
         if (action == ActionKind.None) return "Nenhuma ação";
@@ -85,8 +92,12 @@ public sealed class ActionExecutor
             }
         }
 
-        // Evita clique/teclado sintetico sobre o proprio configurador.
-        if (appHasFocus) return "Saída ignorada: deixe outro aplicativo em foco";
+        // Protege a configuracao contra insercoes acidentais.
+        // Alt+Tab e a excecao: precisa funcionar para sair da janela do Crontrole.
+        bool isAltTab = action == ActionKind.CustomKeyboard && shortcut is
+            { Alt: true, VirtualKey: 0x09, Control: false, Shift: false, Windows: false };
+        if (appHasFocus && !isAltTab && !IsMouseAction(action))
+            return "Ação ignorada: janela Crontrole em foco (teste em outro aplicativo)";
 
         return action switch
         {
@@ -96,6 +107,7 @@ public sealed class ActionExecutor
             ActionKind.Undo => KeyChord(0x11, 0x5A, "Ctrl+Z"),
             ActionKind.Enter => SingleKey(0x0D, "Enter"),
             ActionKind.Tab => SingleKey(0x09, "Tab"),
+            ActionKind.Alt => SingleKey(0x12, "Alt"),
             ActionKind.Escape => SingleKey(0x1B, "Esc"),
             ActionKind.Space => SingleKey(0x20, "Espaço"),
             ActionKind.Backspace => SingleKey(0x08, "Backspace"),
@@ -143,6 +155,11 @@ public sealed class ActionExecutor
         Type = InputMouse,
         Data = new InputUnion { Mouse = new MOUSEINPUT { Flags = flag, MouseData = data } }
     };
+
+    private static bool IsMouseAction(ActionKind action) => action is
+        ActionKind.MouseLeft or ActionKind.MouseRight or ActionKind.MouseMiddle or
+        ActionKind.MouseDoubleLeft or ActionKind.MouseBack or ActionKind.MouseForward or
+        ActionKind.WheelUp or ActionKind.WheelDown or ActionKind.WheelLeft or ActionKind.WheelRight;
 
     private static string SingleKey(ushort key, string label) =>
         Send([Keyboard(key), Keyboard(key, true)], label);

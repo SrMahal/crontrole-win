@@ -21,5 +21,6 @@ Estes documentos foram preservados como registros de implementação e podem con
 
 - [TASK-003 — Base desktop e ações locais](TASK-003.md)
 - [TASK-005 — Identificação física e ações de entrada](TASK-005.md)
+- [TASK-006 — Captura de entrada e combinações](TASK-006.md)
 
-> **Nomenclatura:** a marca pública agora é **Crontrole**, com **Alpha v1.0** como nome planejado para o primeiro lançamento. O projeto C# mantém, no momento, o identificador interno `Kp4040.App`; a base técnica publicada foi identificada como Alpha 0.5.1. Renomear o projeto sem migrar cuidadosamente namespaces, recursos e perfis pode quebrar a aplicação.
+> **Nomenclatura:** a janela e o executável usam **Crontrole**. O projeto C# e a pasta do perfil mantêm identificadores legados para preservar a compatibilidade com configurações existentes.

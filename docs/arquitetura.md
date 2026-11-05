@@ -9,9 +9,10 @@ O Crontrole é um **aplicativo desktop local**, não um driver nem um serviço w
 ```text
 Controle físico XInput
        |
-       +--> XInputReader --> ControllerSnapshot
-                |                  |
-                |                  +--> InputMonitor --> ButtonEvent
+       +--> ControllerPollingService (thread, alvo 8 ms)
+                |        |
+                |        +--> XInputReader --> ControllerSnapshot
+                |        +--> InputMonitor --> fila de ButtonEvent
                 |                                      |
                 |                                      +--> MainWindow --> ActionExecutor --> SendInput / navegador
                 |
@@ -31,7 +32,9 @@ ControllerProfile <--> ProfileStore <--> JSON em %LOCALAPPDATA%
 | [`src/Kp4040.App/MainWindow.xaml`](../src/Kp4040.App/MainWindow.xaml) | Interface e controles WPF. |
 | [`src/Kp4040.App/MainWindow.xaml.cs`](../src/Kp4040.App/MainWindow.xaml.cs) | Coordenação entre UI, mapeamentos e serviços. |
 | [`Services/XInputReader.cs`](../src/Kp4040.App/Services/XInputReader.cs) | Lê o primeiro controle XInput conectado. |
+| [`Services/ControllerPollingService.cs`](../src/Kp4040.App/Services/ControllerPollingService.cs) | Lê botões fora da thread da UI e enfileira eventos. |
 | [`Services/InputMonitor.cs`](../src/Kp4040.App/Services/InputMonitor.cs) | Converte mudanças em eventos de pressionar/soltar. |
+| [`Services/ShortcutTextParser.cs`](../src/Kp4040.App/Services/ShortcutTextParser.cs) | Interpreta combinações digitadas no editor. |
 | [`Services/ActionExecutor.cs`](../src/Kp4040.App/Services/ActionExecutor.cs) | Executa atalhos, ações de mouse/mídia e abertura de URL. |
 | [`Services/MousePollingService.cs`](../src/Kp4040.App/Services/MousePollingService.cs) | Leitura rápida independente da interface para analógicos. |
 | [`Services/AnalogMouseController.cs`](../src/Kp4040.App/Services/AnalogMouseController.cs) | Aplica zona morta e converte analógicos em mouse/scroll. |
@@ -44,7 +47,7 @@ ControllerProfile <--> ProfileStore <--> JSON em %LOCALAPPDATA%
 
 ## Ciclo de atualização
 
-O `MainWindow` usa um `DispatcherTimer` de **45 ms** para atualizar a interface, estados digitais e execução de ações vinculadas a botões. O `MousePollingService` utiliza uma thread própria com `Thread.Sleep(8)` como **alvo** para suavizar cursor e scroll. A precisão real não é garantida pelo scheduler do Windows.
+O `ControllerPollingService` lê botões em uma thread com alvo de **8 ms**. O `MainWindow` usa um `DispatcherTimer` de **45 ms** para atualizar a interface e consumir a fila de eventos. O `MousePollingService` utiliza outra thread com `Thread.Sleep(8)` como alvo para cursor e scroll. A precisão real não é garantida pelo agendador do Windows.
 
 O `InputMonitor` detecta mudanças de estado e evita disparar novamente uma ação a cada frame enquanto um botão está segurado.
 

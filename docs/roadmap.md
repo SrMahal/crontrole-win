@@ -2,7 +2,7 @@
 
 [← Índice da documentação](README.md)
 
-O Crontrole passa a adotar **Alpha v1.0** como identidade do primeiro lançamento público experimental. A base de código atualmente presente no repositório corresponde à **Alpha 0.5.1**. A reorganização da documentação **não** altera a versão binária nem confirma que o Release já foi publicado.
+O Crontrole usa **Alpha v1.0** como identidade experimental. A base atual inclui o ícone, atalhos combinados por botões, arraste pelo controle e pacote Windows dependente do .NET 10 Desktop Runtime.
 
 ## Implementado na base atual
 
@@ -13,16 +13,19 @@ O Crontrole passa a adotar **Alpha v1.0** como identidade do primeiro lançament
 - [x] Movimentação do cursor e scroll pelos sticks.
 - [x] Serviço independente de mouse com intervalo-alvo de 8 ms.
 - [x] Persistência local em JSON e compatibilidade com perfis existentes.
-- [x] Ações desabilitadas por padrão a cada inicialização.
+- [x] Ações e analógicos habilitados por padrão, com caixas para desativá-los.
+- [x] Alt mantido enquanto o botão do controle estiver pressionado; Alt+Tab entre dois botões.
+- [x] Clique esquerdo mantido para arrastar com o stick.
+- [x] Ícone do aplicativo e botão para remover atalhos salvos.
 
 ## Próximos incrementos propostos
 
-### Alpha v1.0 — consolidação pública
+### Consolidação pública
 
-- [ ] Atualizar título e identidade visual do aplicativo para **Crontrole**.
+- [x] Atualizar título e identidade visual do aplicativo para **Crontrole**.
 - [ ] Documentar e testar migração dos identificadores técnicos legados.
-- [ ] Corrigir versionamento de `bin/` e `obj/`.
-- [ ] Revisar instalador/pacote executável do Windows.
+- [x] Manter `bin/` e `obj/` fora do versionamento.
+- [x] Publicar ZIP executável para Windows x64 que usa o .NET 10 instalado.
 - [ ] Publicar release **Pre-release** com changelog e arquivos testados.
 
 ### Evoluções posteriores (sem data prometida)
@@ -39,5 +42,6 @@ O Crontrole passa a adotar **Alpha v1.0** como identidade do primeiro lançament
 
 - [TASK-003 — estrutura inicial](TASK-003.md)
 - [TASK-005 — identificação de entradas](TASK-005.md)
+- [TASK-006 — captura de entrada e combinações](TASK-006.md)
 
 As tasks acima são registros históricos, não uma afirmação de aceite atualizado.
